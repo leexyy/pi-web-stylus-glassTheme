@@ -1,0 +1,33 @@
+{
+	"name": "pi-web-stylus-glassTheme",
+	"version": "1.0.0",
+	"description": "为 @agegr/pi-web 提供无侵入的磨砂玻璃(毛玻璃)主题,基于浏览器 Stylus 扩展",
+	"keywords": [
+		"pi-web",
+		"stylus",
+		"theme",
+		"frosted-glass",
+		"glassmorphism",
+		"userstyle"
+	],
+	"license": "MIT",
+	"type": "module",
+	"engines": {
+		"node": ">=18"
+	},
+	"files": [
+		"src",
+		"tools",
+		"output",
+		"assets",
+		"build.sh"
+	],
+	"scripts": {
+		"build": "./build.sh",
+		"preview": "node tools/preview-compare.mjs",
+		"contrast": "node tools/contrast-check.mjs 0.33 0.52 4 0.45"
+	},
+	"devDependencies": {
+		"sharp": "^0.35.0"
+	}
+}
