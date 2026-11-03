@@ -2,8 +2,8 @@
    pi-web · 毛玻璃背景(macOS 风格)
    由 src/generate.sh 生成(项目 pi-web-stylus-glassTheme),可直接粘进 Stylus
 
-   生成时间:2026-10-08 10:08:18
-   修订:r32-5c710208
+   生成时间:2026-11-03 15:34:30
+   修订:r33-50e04545
    图片:image/webp, 184 KB
    参数:preset=glass scrim=0.52 tint=0.33 tint-panel=0.35 tint-tool=0.50 tint-bubble=0.35 tint-user=0.55 tint-popover=0.6 tint-minimap=0.35 backdrop="blur(20px) saturate(1.7)" blur=4px saturate=1.5 position=45% center base-mix=0 base-color=(theme)
 
@@ -630,6 +630,23 @@ div:has(> div > input[placeholder*="筛选项目"]) > div > button {
   }
 }
 
+/* ── 7.5. 左栏的下拉菜单(.sidebar-menu):归入 §7.1 同一档小浮层 ──────
+   现象:点左栏项目行的「…」(session-tree-group-action)等按钮弹出的菜单,
+   以及左栏其它下拉(会话操作/模型/技能……)全都“透明得像贴纸”——
+   背后的左栏文字、聊天文字清晰可见。
+   原因:pi-web 给 .sidebar-menu 画的是 background: var(--bg),而 --bg 是
+   **内容面**档(--tint,默认 0.56)并且没有 backdrop-filter,它既要压在左栏
+   (已有 0.65 的面板)上,又要盖住聊天区文字,所以必须走浮层档。
+   配方与 §7.1 完全一致:--piw-popover-bg(0.6)+ --piw-backdrop 模糊;
+   要整体更透/更实改 --tint-popover,不要单独动这里。
+   注:.sidebar-menu 由 pi-web 挂到 document.body(portal),祖先上没有
+   backdrop-filter,模糊能直接作用到壁纸那一层,不存在 §2.1 的 backdrop root 问题。 */
+.sidebar-menu {
+  background: var(--piw-popover-bg) !important;
+  backdrop-filter: var(--piw-backdrop) !important;
+  -webkit-backdrop-filter: var(--piw-backdrop) !important;
+}
+
 /* minimap 轨道上的小节点:pi-web 画的是 8x8 小方块(borderRadius:2),
    改成圆点,和轨道的“点”语义更配。节点容器 = [data-minimap-node-index]。 */
 [data-minimap-node-index] > div {
@@ -639,4 +656,4 @@ div:has(> div > input[placeholder*="筛选项目"]) > div > button {
 /* 运行时修订号(DevTools Console):
      getComputedStyle(document.documentElement).getPropertyValue("--piw-rev")
    与本文件头部「修订:」一致 = 页面生效的就是这一版。 */
-:root { --piw-rev: "r32-5c710208"; }
+:root { --piw-rev: "r33-50e04545"; }

@@ -63,7 +63,7 @@
 set -euo pipefail
 
 # ── 修订号:改规则就 +1(生成物里会写 修订:rN-sha8,运行时可读 --piw-rev) ──
-PROJECT_REV="32"
+PROJECT_REV="33"
 
 usage() { awk 'NR>1 { if ($0 !~ /^#/) exit; sub(/^# ?/, ""); print }' "$0"; }
 warn() { printf '%s\n' "$*" >&2; }
@@ -856,6 +856,23 @@ div:has(> div > input[placeholder*="筛选项目"]) > div > button {
     backdrop-filter: var(--piw-backdrop) !important;
     -webkit-backdrop-filter: var(--piw-backdrop) !important;
   }
+}
+
+/* ── 7.5. 左栏的下拉菜单(.sidebar-menu):归入 §7.1 同一档小浮层 ──────
+   现象:点左栏项目行的「…」(session-tree-group-action)等按钮弹出的菜单,
+   以及左栏其它下拉(会话操作/模型/技能……)全都“透明得像贴纸”——
+   背后的左栏文字、聊天文字清晰可见。
+   原因:pi-web 给 .sidebar-menu 画的是 background: var(--bg),而 --bg 是
+   **内容面**档(--tint,默认 0.56)并且没有 backdrop-filter,它既要压在左栏
+   (已有 0.65 的面板)上,又要盖住聊天区文字,所以必须走浮层档。
+   配方与 §7.1 完全一致:--piw-popover-bg(0.6)+ --piw-backdrop 模糊;
+   要整体更透/更实改 --tint-popover,不要单独动这里。
+   注:.sidebar-menu 由 pi-web 挂到 document.body(portal),祖先上没有
+   backdrop-filter,模糊能直接作用到壁纸那一层,不存在 §2.1 的 backdrop root 问题。 */
+.sidebar-menu {
+  background: var(--piw-popover-bg) !important;
+  backdrop-filter: var(--piw-backdrop) !important;
+  -webkit-backdrop-filter: var(--piw-backdrop) !important;
 }
 
 /* minimap 轨道上的小节点:pi-web 画的是 8x8 小方块(borderRadius:2),

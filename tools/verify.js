@@ -34,6 +34,7 @@
       ['[style*="position: fixed"][style*="inset: 0"] > div[style*="background: var(--bg)"]', '添加 Provider 弹窗(无类名/无 role)'],
       ['[style*="position: fixed"][style*="background: var(--bg)"]', '下拉(fixed)'],
       ['[style*="position: absolute"][style*="background: var(--bg)"]', '下拉(absolute)'],
+      ['.sidebar-menu', '左栏下拉菜单(§7.5,如项目行「…」)'],
     ],
   };
   for (const [title, list] of Object.entries(GROUPS)) {
