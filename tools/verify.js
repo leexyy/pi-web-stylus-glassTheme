@@ -25,6 +25,7 @@
       ['.tool-definitions-panel', '顶栏·工具'],
       ['[role="listbox"][style*="background: var(--bg-panel)"]', '顶栏·子会话'],
       ['[style*="position: fixed"][style*="background: var(--bg-panel)"]', '顶栏·分支'],
+      ['.project-trust-dialog', '项目信任确认弹窗(§7.4)'],
     ],
     '浮层类 --bg(期望 6 层)': [
       ['.notice-shelf-item', '右上角 toast'],

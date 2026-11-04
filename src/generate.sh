@@ -63,7 +63,7 @@
 set -euo pipefail
 
 # ── 修订号:改规则就 +1(生成物里会写 修订:rN-sha8,运行时可读 --piw-rev) ──
-PROJECT_REV="33"
+PROJECT_REV="34"
 
 usage() { awk 'NR>1 { if ($0 !~ /^#/) exit; sub(/^# ?/, ""); print }' "$0"; }
 warn() { printf '%s\n' "$*" >&2; }
@@ -829,16 +829,26 @@ div:has(> div > input[placeholder*="筛选项目"]) > div > button {
      二、窗口底色 = --bg-panel(0.35,与左栏同档) + backdrop 模糊;
          不能用浮层档 --tint-popover(0.6):窗口内部的 --bg-panel 侧栏列/卡片
          会叠到 ≈0.74 一列发白(设置里的 config-sidebar 就是这个坑)。
-   小浮层(下拉/小弹窗)不受影响,继续走 7.1 的 --tint-popover。 */
+   小浮层(下拉/小弹窗)不受影响,继续走 7.1 的 --tint-popover。
+
+   信任确认弹窗(.project-trust-*)是**类名 + 静态 CSS**画的一族(role 只有 presentation/dialog,
+   没有内联底色),所以 7.1 / 7.4 里那些 [style*=...] 选择器一个也命中不到:
+    · 遮罩 .project-trust-backdrop:pi-web 写的是 rgba(0,0,0,.4),
+      浅色系下就是“白玻璃 + 0.4 黑纱 = 灰扑扑”的泥色(同 7.4 第一条);
+    · 窗口 .project-trust-dialog:底色 var(--bg-panel) 本来就对,但没有任何模糊,
+      0.35 的平底压在遮罩上,背后的字看得一清二楚。
+   两处分别去下面两条名单里;模糊在下方的 @supports 里补。 */
 .settings-dialog-backdrop,
 .config-panel-root.is-modal,
 .directory-picker-backdrop,
+.project-trust-backdrop,
 [style*="position: fixed"][style*="inset: 0"][style*="background: rgba(0, 0, 0"] {
   background: var(--piw-scrim-modal) !important;
 }
 .settings-dialog-backdrop > .settings-dialog-surface,
 .config-panel-root.is-modal > .config-panel-surface,
-.directory-picker-panel {
+.directory-picker-panel,
+.project-trust-dialog {
   background: var(--bg-panel) !important;
 }
 /* 例外:内容密的“表单型”弹窗 —— 目前就是「添加 Provider」(内联全屏遮罩的直接子,
@@ -850,9 +860,11 @@ div:has(> div > input[placeholder*="筛选项目"]) > div > button {
   background: var(--piw-popover-bg) !important;
 }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  /* 确认弹窗(如「信任此项目」):面板是 inline 的 var(--bg-panel),7.1 名单里没有它,
-     这里补上模糊,否则只是一块平底、没有磨砂。 */
-  [role="dialog"][style*="background: var(--bg-panel)"] {
+  /* 确认弹窗:一类是 inline 的 var(--bg-panel)(7.1 名单里没有它),
+     另一类是类名画的 .project-trust-dialog。两者都补上模糊,
+     否则只是一块平底、没有磨砂。 */
+  [role="dialog"][style*="background: var(--bg-panel)"],
+  .project-trust-dialog {
     backdrop-filter: var(--piw-backdrop) !important;
     -webkit-backdrop-filter: var(--piw-backdrop) !important;
   }
